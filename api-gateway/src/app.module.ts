@@ -6,8 +6,8 @@ import { ChallengesModule } from './challenges/challenges.module';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb+srv://admin:phQtWtDDiFaJVg8H@@cluster0.3mmn8.mongodb.net/test',
-    { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true, useFindAndModify: false }),
+    MongooseModule.forRoot('mongodb+srv://admin:phQtWtDDiFaJVg8H@cluster0.3mmn8.mongodb.net/apigateway?retryWrites=true&w=majority',
+    { useNewUrlParser: true, useUnifiedTopology: true }),
     PlayersModule,
     CategoriesModule,
     ChallengesModule],

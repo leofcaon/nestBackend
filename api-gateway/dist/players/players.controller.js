@@ -11,45 +11,31 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var PlayersController_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PlayersController = void 0;
-const common_1 = require("@nestjs/common");
-const create_player_dto_1 = require("./dtos/create-player.dto");
+const validation_parameters_pipe_1 = require("./../common/pipes/validation-parameters.pipe");
+const players_service_1 = require("./players.service");
 const update_player_dto_1 = require("./dtos/update-player.dto");
-const rxjs_1 = require("rxjs");
-const client_proxy_1 = require("../proxyrmq/client-proxy");
-const validation_parameters_pipe_1 = require("../common/pipes/validation-parameters.pipe");
-let PlayersController = PlayersController_1 = class PlayersController {
-    constructor(clientProxySmartRanking) {
-        this.clientProxySmartRanking = clientProxySmartRanking;
-        this.logger = new common_1.Logger(PlayersController_1.name);
-        this.clientAdminBackend = this.clientProxySmartRanking.getClientProxyAdminBackendInstance();
+const create_player_dto_1 = require("./dtos/create-player.dto");
+const common_1 = require("@nestjs/common");
+let PlayersController = class PlayersController {
+    constructor(playersService) {
+        this.playersService = playersService;
     }
     async createPlayer(createPlayerDto) {
-        this.logger.log(`createPlayerDto: ${JSON.stringify(createPlayerDto)}`);
-        const category = await this.clientAdminBackend.send('consult-categories', createPlayerDto.category).toPromise();
-        if (category) {
-            await this.clientAdminBackend.emit('create-player', createPlayerDto);
-        }
-        else {
-            throw new common_1.BadRequestException(`Categoria não cadastrada!`);
-        }
-    }
-    consultPlayers(_id) {
-        return this.clientAdminBackend.send('consult-players', _id ? _id : '');
+        return await this.playersService.createPlayer(createPlayerDto);
     }
     async updatePlayer(updatePlayerDto, _id) {
-        const category = await this.clientAdminBackend.send('consult-categories', updatePlayerDto.category).toPromise();
-        if (category) {
-            await this.clientAdminBackend.emit('update-player', { id: _id, player: updatePlayerDto });
+        await this.playersService.updatePlayer(_id, updatePlayerDto);
+    }
+    async consultPlayers(_id) {
+        if (_id) {
+            return await this.playersService.consultPlayerById(_id);
         }
-        else {
-            throw new common_1.BadRequestException(`Categoria não cadastrada!`);
-        }
+        return await this.playersService.consultAllPlayers();
     }
     async deletePlayer(_id) {
-        await this.clientAdminBackend.emit('delete-player', { _id });
+        this.playersService.deletePlayer(_id);
     }
 };
 __decorate([
@@ -61,13 +47,6 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], PlayersController.prototype, "createPlayer", null);
 __decorate([
-    common_1.Get(),
-    __param(0, common_1.Query('idPlayerr')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", rxjs_1.Observable)
-], PlayersController.prototype, "consultPlayers", null);
-__decorate([
     common_1.Put('/:_id'),
     common_1.UsePipes(common_1.ValidationPipe),
     __param(0, common_1.Body()),
@@ -77,15 +56,22 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], PlayersController.prototype, "updatePlayer", null);
 __decorate([
+    common_1.Get(),
+    __param(0, common_1.Query('idPlayer')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], PlayersController.prototype, "consultPlayers", null);
+__decorate([
     common_1.Delete('/:_id'),
     __param(0, common_1.Param('_id', validation_parameters_pipe_1.ValidationParametersPipe)),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], PlayersController.prototype, "deletePlayer", null);
-PlayersController = PlayersController_1 = __decorate([
-    common_1.Controller('players'),
-    __metadata("design:paramtypes", [client_proxy_1.ClientProxySmartRanking])
+PlayersController = __decorate([
+    common_1.Controller('api/v1/players'),
+    __metadata("design:paramtypes", [players_service_1.PlayersService])
 ], PlayersController);
 exports.PlayersController = PlayersController;
 //# sourceMappingURL=players.controller.js.map

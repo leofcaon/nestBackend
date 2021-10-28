@@ -1,13 +1,12 @@
-import { CreateCategoryDto } from './dtos/create-category.dto';
 import { UpdateCategoryDto } from './dtos/update-category.dto';
-import { Observable } from 'rxjs';
-import { ClientProxySmartRanking } from '../proxyrmq/client-proxy';
+import { CreateCategoryDto } from './dtos/create-category.dto';
+import { Category } from './interfaces/category.interface';
+import { CategoriesService } from './categories.service';
 export declare class CategoriesController {
-    private clientProxySmartRanking;
-    private logger;
-    constructor(clientProxySmartRanking: ClientProxySmartRanking);
-    private clientAdminBackend;
-    createCategory(createCategoryDto: CreateCategoryDto): void;
-    consultCategories(_id: string): Observable<any>;
-    updateCategory(updateCategoryDto: UpdateCategoryDto, _id: string): void;
+    private readonly categoriesService;
+    constructor(categoriesService: CategoriesService);
+    createCategory(createCategoryDto: CreateCategoryDto): Promise<Category>;
+    consultCategories(params: string[]): Promise<Array<Category> | Category>;
+    updateCategory(updateCategoryDto: UpdateCategoryDto, category: string): Promise<void>;
+    addCategoryToPlayer(params: string[]): Promise<void>;
 }

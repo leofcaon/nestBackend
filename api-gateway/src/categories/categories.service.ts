@@ -22,7 +22,7 @@ export class CategoriesService {
         const categoryFounded = await this.categoryModel.findOne({category}).exec();
 
         if (categoryFounded) {
-            throw new BadRequestException(`Category ${category} já cadastrada!`)
+            throw new BadRequestException(`Categoria ${category} já cadastrada!`)
         }
 
         const categoryCreated = new this.categoryModel(createCategoryDto)

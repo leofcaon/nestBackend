@@ -8,17 +8,22 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
+const mongoose_1 = require("@nestjs/mongoose");
 const categories_module_1 = require("./categories/categories.module");
 const players_module_1 = require("./players/players.module");
-const client_proxy_1 = require("./proxyrmq/client-proxy");
-const proxyrmq_module_1 = require("./proxyrmq/proxyrmq.module");
+const challenges_module_1 = require("./challenges/challenges.module");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
     common_1.Module({
-        imports: [categories_module_1.CategoriesModule, players_module_1.PlayersModule, proxyrmq_module_1.ProxyRMQModule],
+        imports: [
+            mongoose_1.MongooseModule.forRoot('mongodb+srv://admin:phQtWtDDiFaJVg8H@cluster0.3mmn8.mongodb.net/apigateway?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true }),
+            players_module_1.PlayersModule,
+            categories_module_1.CategoriesModule,
+            challenges_module_1.ChallengesModule
+        ],
         controllers: [],
-        providers: [client_proxy_1.ClientProxySmartRanking],
+        providers: [],
     })
 ], AppModule);
 exports.AppModule = AppModule;

@@ -11,28 +11,35 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var CategoriesController_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CategoriesController = void 0;
+const update_category_dto_1 = require("./dtos/update-category.dto");
 const common_1 = require("@nestjs/common");
 const create_category_dto_1 = require("./dtos/create-category.dto");
-const update_category_dto_1 = require("./dtos/update-category.dto");
-const rxjs_1 = require("rxjs");
-const client_proxy_1 = require("../proxyrmq/client-proxy");
-let CategoriesController = CategoriesController_1 = class CategoriesController {
-    constructor(clientProxySmartRanking) {
-        this.clientProxySmartRanking = clientProxySmartRanking;
-        this.logger = new common_1.Logger(CategoriesController_1.name);
-        this.clientAdminBackend = this.clientProxySmartRanking.getClientProxyAdminBackendInstance();
+const categories_service_1 = require("./categories.service");
+let CategoriesController = class CategoriesController {
+    constructor(categoriesService) {
+        this.categoriesService = categoriesService;
     }
-    createCategory(createCategoryDto) {
-        this.clientAdminBackend.emit('create-category', createCategoryDto);
+    async createCategory(createCategoryDto) {
+        return await this.categoriesService.createCategory(createCategoryDto);
     }
-    consultCategories(_id) {
-        return this.clientAdminBackend.send('consult-categories', _id ? _id : '');
+    async consultCategories(params) {
+        const idCategory = params['idCategory'];
+        const idPlayer = params['idPlayer'];
+        if (idCategory) {
+            return await this.categoriesService.consultCategoryById(idCategory);
+        }
+        if (idPlayer) {
+            return await this.categoriesService.consultCategoryOfPlayer(idPlayer);
+        }
+        return await this.categoriesService.consultAllCategories();
     }
-    updateCategory(updateCategoryDto, _id) {
-        this.clientAdminBackend.emit('update-category', { id: _id, category: updateCategoryDto });
+    async updateCategory(updateCategoryDto, category) {
+        await this.categoriesService.updateCategory(category, updateCategoryDto);
+    }
+    async addCategoryToPlayer(params) {
+        return await this.categoriesService.addCategoryToPlayer(params);
     }
 };
 __decorate([
@@ -41,27 +48,34 @@ __decorate([
     __param(0, common_1.Body()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_category_dto_1.CreateCategoryDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], CategoriesController.prototype, "createCategory", null);
 __decorate([
     common_1.Get(),
-    __param(0, common_1.Query('idCategory')),
+    __param(0, common_1.Query()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", rxjs_1.Observable)
+    __metadata("design:paramtypes", [Array]),
+    __metadata("design:returntype", Promise)
 ], CategoriesController.prototype, "consultCategories", null);
 __decorate([
-    common_1.Put('/:_id'),
+    common_1.Put('/:category'),
     common_1.UsePipes(common_1.ValidationPipe),
     __param(0, common_1.Body()),
-    __param(1, common_1.Param('_id')),
+    __param(1, common_1.Param('category')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [update_category_dto_1.UpdateCategoryDto, String]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], CategoriesController.prototype, "updateCategory", null);
-CategoriesController = CategoriesController_1 = __decorate([
-    common_1.Controller(),
-    __metadata("design:paramtypes", [client_proxy_1.ClientProxySmartRanking])
+__decorate([
+    common_1.Post('/:category/players/:idPlayer'),
+    __param(0, common_1.Param()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Array]),
+    __metadata("design:returntype", Promise)
+], CategoriesController.prototype, "addCategoryToPlayer", null);
+CategoriesController = __decorate([
+    common_1.Controller('api/v1/categories'),
+    __metadata("design:paramtypes", [categories_service_1.CategoriesService])
 ], CategoriesController);
 exports.CategoriesController = CategoriesController;
 //# sourceMappingURL=categories.controller.js.map

@@ -25,9 +25,5 @@ __decorate([
     class_validator_1.IsNotEmpty(),
     __metadata("design:type", String)
 ], CreatePlayerDto.prototype, "name", void 0);
-__decorate([
-    class_validator_1.IsNotEmpty(),
-    __metadata("design:type", String)
-], CreatePlayerDto.prototype, "category", void 0);
 exports.CreatePlayerDto = CreatePlayerDto;
 //# sourceMappingURL=create-player.dto.js.map

@@ -6,7 +6,7 @@ import { PlayersService } from './players.service';
 import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: 'Jogador', schema: PlayerSchema}]) ],
+  imports: [MongooseModule.forFeature([{ name: 'Player', schema: PlayerSchema}]) ],
   controllers: [PlayersController],
   providers: [
     PlayersService],

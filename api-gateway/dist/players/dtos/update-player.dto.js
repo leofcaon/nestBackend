@@ -21,9 +21,5 @@ __decorate([
     class_validator_1.IsNotEmpty(),
     __metadata("design:type", String)
 ], UpdatePlayerDto.prototype, "name", void 0);
-__decorate([
-    class_validator_1.IsOptional(),
-    __metadata("design:type", String)
-], UpdatePlayerDto.prototype, "category", void 0);
 exports.UpdatePlayerDto = UpdatePlayerDto;
 //# sourceMappingURL=update-player.dto.js.map

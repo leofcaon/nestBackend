@@ -7,15 +7,21 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PlayersModule = void 0;
+const player_schema_1 = require("./interfaces/player.schema");
 const common_1 = require("@nestjs/common");
 const players_controller_1 = require("./players.controller");
-const proxyrmq_module_1 = require("../proxyrmq/proxyrmq.module");
+const players_service_1 = require("./players.service");
+const mongoose_1 = require("@nestjs/mongoose");
 let PlayersModule = class PlayersModule {
 };
 PlayersModule = __decorate([
     common_1.Module({
-        imports: [proxyrmq_module_1.ProxyRMQModule],
-        controllers: [players_controller_1.PlayersController]
+        imports: [mongoose_1.MongooseModule.forFeature([{ name: 'Player', schema: player_schema_1.PlayerSchema }])],
+        controllers: [players_controller_1.PlayersController],
+        providers: [
+            players_service_1.PlayersService
+        ],
+        exports: [players_service_1.PlayersService]
     })
 ], PlayersModule);
 exports.PlayersModule = PlayersModule;

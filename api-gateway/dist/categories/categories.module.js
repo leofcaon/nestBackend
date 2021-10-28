@@ -9,13 +9,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CategoriesModule = void 0;
 const common_1 = require("@nestjs/common");
 const categories_controller_1 = require("./categories.controller");
-const proxyrmq_module_1 = require("../proxyrmq/proxyrmq.module");
+const categories_service_1 = require("./categories.service");
+const mongoose_1 = require("@nestjs/mongoose");
+const category_schema_1 = require("./interfaces/category.schema");
+const players_module_1 = require("../players/players.module");
 let CategoriesModule = class CategoriesModule {
 };
 CategoriesModule = __decorate([
     common_1.Module({
-        imports: [proxyrmq_module_1.ProxyRMQModule],
-        controllers: [categories_controller_1.CategoriesController]
+        imports: [mongoose_1.MongooseModule.forFeature([{ name: 'Category', schema: category_schema_1.CategorySchema }]),
+            players_module_1.PlayersModule],
+        controllers: [categories_controller_1.CategoriesController],
+        providers: [categories_service_1.CategoriesService],
+        exports: [categories_service_1.CategoriesService]
     })
 ], CategoriesModule);
 exports.CategoriesModule = CategoriesModule;
